@@ -18,8 +18,9 @@ def find_shortest_path(tree_of_paths:Tree) -> tuple(list, float) :
         second, return the sum of the distances finded.
     """
 
-def get_all_leafs(tree_of_paths:Tree) -> list[Tree] :
-    """Check a given tree and return all its leafs (last childs without childs)"""
+def calculate_path_sum(leaf:Tree) -> float:
+    """Calculate the distance from a leaf and each parents and return the sum of distances
+    That function will call multiple time the function 'calculate_distance'"""
 
 # Reçoit une liste comprenant chaque chemin possible (successions de points) et la somme de leurs distances.
 def compare_distance_of_lists(path_finded:list(tuple(list, float))) -> tuple(list, float) :
