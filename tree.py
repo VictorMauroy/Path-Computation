@@ -1,10 +1,11 @@
 class Tree :
 #region Initialization, add child and check leaf
     def __init__(self, name:str, coordonate:tuple[int, int], parent = None) -> None:
+        self.parent_branch:Tree = parent
         self.name = name
         self.coordonates = coordonate
         self.child_branchs:list[Tree] = []
-        self.parent_branch = parent
+        
 
     def add_child(self, name:str, value:tuple, parent) -> None :
         """Initialize and add a child to the current branch"""
@@ -28,8 +29,27 @@ class Tree :
         depth_list = [childBranch.get_depth() for childBranch in self.child_branchs]
         return max(depth_list) + 1
 
-    def get_all_leafs(self, tree_of_paths) -> list :
-        """Check a given tree and return all its leafs (last childs without childs)"""
+    def browse_depth(self, list_of_branchs:list = []) -> list :
+        """Return the childs with their coordonates by using the depth browse method"""
+        #print(f"{self.coordonates} is {'a leaf' if self.is_leaf() else 'not a leaf'}")
+        
+        if not self.is_leaf() :
+            for branch in self.child_branchs :
+                branch.browse_depth(list_of_branchs)
+        
+        list_of_branchs.append(self.name)
+
+        return list_of_branchs
+
+    def get_all_leafs(self, list_of_leaves:list = []) -> list :
+        """Check a given tree and return all its leaves (last child without childs)"""
+        for branch in self.child_branchs :
+            if not branch.is_leaf() :
+                branch.get_all_leafs(list_of_leaves)
+            else :
+                list_of_leaves.append(branch)
+        
+        return list_of_leaves
 
     def create_tree_from_dictionary(self, positions_dict:dict) :
         """Create one child for each element of the dictionary different of us and remove ourself
