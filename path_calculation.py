@@ -18,49 +18,49 @@ def calculate_distance(first_point:tuple, second_point:tuple) -> float :
     )
 
 def find_shortest_path(root:Tree) :
-    """_summary_
+    """Check each path of a tree and return the one with the lowest distance to visit each point. 
 
     Returns:
-        tuple (list, int): First, return a list of point, ordered to have the smallest sum of distances.
-        second, return the sum of the distances finded.
+        tuple (list, int): First, return a list of trees, from the leaf/bottom of the tree to the origin.
+        second, return the sum of the distances between each points of the smallest path of the tree.
     """
     myleaves:list[Tree] = root.get_all_leafs()
-    list_distances=[]
+    list_distances = []
 
     for leaf in myleaves :
         list_distances.append(calculate_path_sum(leaf))
     
     index_where_is_min = 0
-    minDistanceFounded:int = 99999999999999999999999999999999999999999999
+    minimal_distance_founded:int = 99999999999999999999999999999999999999999999
 
     for i in range(len(list_distances)) :
-        if list_distances[i] < minDistanceFounded :
-            minDistanceFounded = list_distances[i]
+        if list_distances[i] < minimal_distance_founded :
+            minimal_distance_founded = list_distances[i]
             index_where_is_min = i
 
     best_path = [myleaves[index_where_is_min]]
-    file_attente = [myleaves[index_where_is_min]]
-    while len(file_attente)>0 :
-        if not file_attente[0].is_root() :
-            best_path.append(file_attente[0].parent_branch)
-            file_attente.append(file_attente[0].parent_branch)
-        file_attente.pop(0)
+    waiting_queue = best_path.copy()
+    while len(waiting_queue)>0 :
+        if not waiting_queue[0].is_root() :
+            best_path.append(waiting_queue[0].parent_branch)
+            waiting_queue.append(waiting_queue[0].parent_branch)
+        waiting_queue.pop(0)
     
-    return best_path, minDistanceFounded
+    return best_path, minimal_distance_founded
 
 def calculate_path_sum(leaf:Tree) -> float:
     """Calculate the distance from a leaf and each parents and return the sum of distances
     That function will call multiple time the function 'calculate_distance'"""
-    queue:list[Tree] = []
+    waiting_queue:list[Tree] = []
     distance = 0
-    if leaf.parent_branch == None :
+    if leaf.is_root() :
         return 0
     
-    queue.append(leaf)
-    while len(queue)>0 :
-        if not queue[0].is_root() :
-            distance += calculate_distance(queue[0].coordonates, queue[0].parent_branch.coordonates)
-            queue.append(queue[0].parent_branch)
-        queue.pop(0)
+    waiting_queue.append(leaf)
+    while len(waiting_queue) > 0 :
+        if not waiting_queue[0].is_root() :
+            distance += calculate_distance(waiting_queue[0].coordonates, waiting_queue[0].parent_branch.coordonates)
+            waiting_queue.append(waiting_queue[0].parent_branch)
+        waiting_queue.pop(0)
     
     return distance
