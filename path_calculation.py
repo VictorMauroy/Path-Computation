@@ -17,18 +17,50 @@ def calculate_distance(first_point:tuple, second_point:tuple) -> float :
         (y2 - y1) ** 2
     )
 
-#def find_shortest_path(tree_of_paths:Tree) -> tuple(list, float) :
+def find_shortest_path(root:Tree) :
     """_summary_
 
     Returns:
         tuple (list, int): First, return a list of point, ordered to have the smallest sum of distances.
         second, return the sum of the distances finded.
     """
+    myleaves:list[Tree] = root.get_all_leafs()
+    list_distances=[]
 
-#def calculate_path_sum(leaf:Tree) -> float:
+    for leaf in myleaves :
+        list_distances.append(calculate_path_sum(leaf))
+    
+    index_where_is_min = 0
+    minDistanceFounded:int = 99999999999999999999999999999999999999999999
+
+    for i in range(len(list_distances)) :
+        if list_distances[i] < minDistanceFounded :
+            minDistanceFounded = list_distances[i]
+            index_where_is_min = i
+
+    best_path = [myleaves[index_where_is_min]]
+    file_attente = [myleaves[index_where_is_min]]
+    while len(file_attente)>0 :
+        if not file_attente[0].is_root() :
+            best_path.append(file_attente[0].parent_branch)
+            file_attente.append(file_attente[0].parent_branch)
+        file_attente.pop(0)
+    
+    return best_path, minDistanceFounded
+
+def calculate_path_sum(leaf:Tree) -> float:
     """Calculate the distance from a leaf and each parents and return the sum of distances
     That function will call multiple time the function 'calculate_distance'"""
-
-# Reçoit une liste comprenant chaque chemin possible (successions de points) et la somme de leurs distances.
-#def compare_distance_of_lists(path_finded:list(tuple(list, float))) -> tuple(list, float) :
-    """"""
+    queue:list[Tree] = []
+    distance = 0
+    if leaf.parent_branch == None :
+        return 0
+    
+    queue.append(leaf)
+    while len(queue)>0 :
+        if not queue[0].is_root() :
+            distance += calculate_distance(queue[0].coordonates, queue[0].parent_branch.coordonates)
+            queue.append(queue[0].parent_branch)
+        queue.pop(0)
+    
+    return distance

@@ -18,7 +18,7 @@ class Tree :
     
     def is_root(self) -> bool :
         """Whether the current tree is the root or not"""
-        return not self.parent != None
+        return not self.parent_branch != None
 #endregion
 
     def get_depth(self) -> int :
